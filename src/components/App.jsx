@@ -14,6 +14,10 @@ function App(props) {
 	return (
 		<div className="App">
 			<Router>
+				<Header />
+				<Home />
+			</Router>
+			{/* <Router>
 				<Switch>
 					<Route exact path="/">
 						<Login />
@@ -23,7 +27,7 @@ function App(props) {
 						<Home />
 					</Route>
 				</Switch>
-			</Router>
+			</Router> */}
 		</div>
 	);
 }

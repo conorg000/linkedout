@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { signOutAPI } from "../action";
+import { signInAPI, signOutAPI } from "../action";
 
 const Container = styled.div`
 	background-color: #fff;
@@ -191,6 +191,27 @@ const Work = styled(User)`
 	border-left: 1px solid rgba(0, 0, 0, 0.08);
 `;
 
+const handleSubmit = (event, signInMethod) => {
+	event.preventDefault();
+	signInMethod(event.target.email.value, event.target.password.value);
+}	
+
+const AdminSignInForm = ({signInMethod}) => {
+	return (
+		<form className="form" onSubmit={(event) => handleSubmit(event, signInMethod)}>
+			<div className="input-group">
+			<label htmlFor="email">Email</label>
+			<input type="email" name="email" placeholder="nome@email.com.br" />
+			</div>
+			<div className="input-group">
+			<label htmlFor="password">Password</label>
+			<input type="password" name="password" />
+			</div>
+			<button className="primary">Sign In</button>
+		</form>
+	)
+}
+
 function Header(props) {
 	return (
 		<Container>
@@ -209,7 +230,7 @@ function Header(props) {
 					</SearchIcon>
 				</Search>
 				<SignOutMobile onClick={() => props.signOut()}>
-					<a>Sign Out</a>
+					<a>Admin Sign In</a>
 				</SignOutMobile>
 				<Nav>
 					<NavListWrap>
@@ -250,8 +271,9 @@ function Header(props) {
 									Me <img src="/images/down-icon.svg" alt="" />
 								</span>
 							</a>
-							<SignOut onClick={() => props.signOut()}>
-								<a>Sign Out</a>
+							<a onClick={() => props.signOut()}>Sign Out</a>
+							<SignOut>
+								<AdminSignInForm signInMethod={props.adminSignIn}/>
 							</SignOut>
 						</User>
 						<Work>
@@ -276,6 +298,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+	adminSignIn: (email, password) => dispatch(signInAPI(email, password)),
 	signOut: () => dispatch(signOutAPI()),
 });
 

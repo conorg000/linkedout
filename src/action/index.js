@@ -1,4 +1,5 @@
 import db, { auth, provider, storage } from "../firebase";
+import { defaultUser } from "../reducers/userReducer";
 import { SET_LOADING_STATUS, SET_USER, GET_ARTICLES } from "./actionType";
 
 export function setUser(payload) {
@@ -33,10 +34,19 @@ export function getUserAuth() {
 	};
 }
 
-export function signInAPI() {
+export function signInAPI(email, password) {
+	// return (dispatch) => {
+	// 	auth.signInWithPopup(provider)
+	// 		.then((payload) => dispatch(setUser(payload.user)))
+	// 		.catch((err) => alert(err.message));
+	// };
+	console.log("CG signing in ", email, password)
 	return (dispatch) => {
-		auth.signInWithPopup(provider)
-			.then((payload) => dispatch(setUser(payload.user)))
+		auth.signInWithEmailAndPassword(email, password)
+			.then((payload) => {
+				console.log("CG ", payload);
+				//dispatch(setUser(payload.user));
+			})
 			.catch((err) => alert(err.message));
 	};
 }
@@ -44,7 +54,7 @@ export function signInAPI() {
 export function signOutAPI() {
 	return (dispatch) => {
 		auth.signOut()
-			.then(() => dispatch(setUser(null)))
+			.then(() => dispatch(setUser(defaultUser)))
 			.catch((err) => alert(err.message));
 	};
 }
