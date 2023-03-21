@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
-import { getArticlesAPI, updateArticleAPI } from "../action";
+import { getArticlesAPI, getProfilesAPI, updateArticleAPI } from "../action";
 import PostalModal from "./PostalModal";
 
 const Container = styled.div`
@@ -207,6 +207,7 @@ function Main(props) {
 
 	useEffect(() => {
 		props.getArticles();
+		props.getProfiles();
 	}, []);
 
 	const clickHandler = (event) => {
@@ -360,6 +361,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
 	getArticles: () => dispatch(getArticlesAPI()),
+	getProfiles: () => dispatch(getProfilesAPI()),
 	likeHandler: (payload) => dispatch(updateArticleAPI(payload)),
 });
 

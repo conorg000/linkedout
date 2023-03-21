@@ -171,6 +171,7 @@ function PostalModal(props) {
 	const [imageFile, setImageFile] = useState("");
 	const [videoFile, setVideoFile] = useState("");
 	const [assetArea, setAssetArea] = useState("");
+	const [selectedProfile, setSelectedProfile] = useState({});
 
 	const reset = (event) => {
 		setEditorText("");
@@ -226,10 +227,19 @@ function PostalModal(props) {
 							</button>
 						</Header>
 						<SharedContent>
+							<select 
+							onChange={e => setSelectedProfile(e.target.value == "" ? {} : props.profiles[e.target.value])}
+							>
+								<option key={-1} value={""}>Select profile to post with</option>
+								{props.profiles.map((profile, index) => 
+                                    <option key={index} value={index}>{profile.displayName}</option>
+                                )}
+							</select>
 							<UserInfo>
-								{props.user.photoURL ? <img src={props.user.photoURL} alt="" /> : <img src="/images/user.svg" alt="" />}
-								<span>{props.user.displayName ? props.user.displayName : "Name"}</span>
+								{Object.keys(selectedProfile).length > 0 ? <img src={selectedProfile.photoURL} alt="" /> : <img src="/images/user.svg" alt="" />}
+								<span>{Object.keys(selectedProfile).length > 0 ? selectedProfile.displayName : "Name"}</span>
 							</UserInfo>
+							<p>{Object.keys(selectedProfile).length > 0 ? selectedProfile.headline : ""}</p>
 							<Editor>
 								<textarea value={editorText} onChange={(event) => setEditorText(event.target.value)} placeholder="What do you want to talk about?" autoFocus={true} />
 
@@ -287,6 +297,7 @@ function PostalModal(props) {
 const mapStateToProps = (state) => {
 	return {
 		user: state.userState.user,
+		profiles: state.profileState.profiles
 	};
 };
 

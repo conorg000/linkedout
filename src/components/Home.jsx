@@ -70,7 +70,7 @@ function Home(props) {
 					<h5>
 						<a>Hiring in a hurray..?</a>
 					</h5>
-					<p>- Find talented pros in record time with LinkedIn and keep business moving.</p>
+					<p>- Find talented pros in record time with LinkedOut and fire them when the project is finished.</p>
 				</Section>
 				<Layout>
 					<Left />

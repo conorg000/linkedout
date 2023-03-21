@@ -1,6 +1,6 @@
 import db, { auth, provider, storage } from "../firebase";
 import { defaultUser } from "../reducers/userReducer";
-import { SET_LOADING_STATUS, SET_USER, GET_ARTICLES } from "./actionType";
+import { SET_LOADING_STATUS, SET_USER, GET_ARTICLES, GET_PROFILES } from "./actionType";
 
 export function setUser(payload) {
 	return {
@@ -19,6 +19,14 @@ export function setLoading(status) {
 export function getArticles(payload, id) {
 	return {
 		type: GET_ARTICLES,
+		payload: payload,
+		id: id,
+	};
+}
+
+export function getProfiles(payload, id) {
+	return {
+		type: GET_PROFILES,
 		payload: payload,
 		id: id,
 	};
@@ -152,5 +160,21 @@ export function getArticlesAPI() {
 export function updateArticleAPI(payload) {
 	return (dispatch) => {
 		db.collection("articles").doc(payload.id).update(payload.update);
+	};
+}
+
+export function getProfilesAPI() {
+	return (dispatch) => {
+		dispatch(setLoading(true));
+		let payload;
+		let id;
+		db.collection("profiles")
+			.orderBy("displayName", "desc")
+			.onSnapshot((snapshot) => {
+				payload = snapshot.docs.map((doc) => doc.data());
+				id = snapshot.docs.map((doc) => doc.id);
+				dispatch(getProfiles(payload, id));
+			});
+		dispatch(setLoading(false));
 	};
 }
