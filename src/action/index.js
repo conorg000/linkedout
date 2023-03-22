@@ -82,7 +82,7 @@ export function postArticleAPI(payload) {
 					const downloadURL = await upload.snapshot.ref.getDownloadURL();
 					db.collection("articles").add({
 						actor: {
-							description: payload.user.email,
+							description: payload.user.headline,
 							title: payload.user.displayName,
 							date: payload.timestamp,
 							image: payload.user.photoURL,
@@ -103,7 +103,7 @@ export function postArticleAPI(payload) {
 			dispatch(setLoading(true));
 			db.collection("articles").add({
 				actor: {
-					description: payload.user.email,
+					description: payload.user.headline,
 					title: payload.user.displayName,
 					date: payload.timestamp,
 					image: payload.user.photoURL,
@@ -122,7 +122,7 @@ export function postArticleAPI(payload) {
 			dispatch(setLoading(true));
 			db.collection("articles").add({
 				actor: {
-					description: payload.user.email,
+					description: payload.user.headline,
 					title: payload.user.displayName,
 					date: payload.timestamp,
 					image: payload.user.photoURL,
