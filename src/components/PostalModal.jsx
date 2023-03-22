@@ -3,7 +3,7 @@ import ReactPlayer from "react-player";
 import { connect } from "react-redux";
 import Firebase from "firebase";
 import styled from "styled-components";
-import { postArticleAPI } from "../action";
+import { createProfileAPI, postArticleAPI } from "../action";
 
 const Container = styled.div`
 	position: fixed;
@@ -166,6 +166,41 @@ const UploadImage = styled.div`
 	}
 `;
 
+const handleSubmit = (event, createProfileMethod) => {
+	event.preventDefault();
+	const newProfile = {
+		displayName: event.target.displayName.value,
+		email: event.target.email.value,
+		headline: event.target.headline.value,
+		photoURL: event.target.photoURL.value,
+	}
+	createProfileMethod(newProfile);
+}	
+
+const CreateProfileForm = ({createProfileMethod}) => {
+	return (
+		<form className="form" onSubmit={(event) => handleSubmit(event, createProfileMethod)}>
+			<div className="input-group">
+				<label htmlFor="displayName">Full name</label>
+				<input type="text" name="displayName" placeholder="Bob Burnquist" />
+			</div>
+			<div className="input-group">
+				<label htmlFor="email">Email (can just make it up)</label>
+				<input type="email" name="email" placeholder="nome@email.com.br" />
+			</div>
+			<div className="input-group">
+				<label htmlFor="headline">Headline (e.g. "Drug Dealer", "Martian Rights Activist")</label>
+				<input type="text" name="headline" placeholder="I sell drugs FAST" />
+			</div>
+			<div className="input-group">
+				<label htmlFor="photoURL">Photo (Copy paste the link of a pic on the internet. For non-famous people, I'd suggest using https://this-person-does-not-exist.com/en)</label>
+				<input type="url" name="photoURL" placeholder="https://i.pinimg.com/originals/a2/4c/16/a24c161fea2b24bd5967337d1684ff21.jpg" />
+			</div>
+			<button className="primary">Create Profile (and then find Profile in dropdown)</button>
+		</form>
+	)
+}
+
 function PostalModal(props) {
 	const [editorText, setEditorText] = useState("");
 	const [imageFile, setImageFile] = useState("");
@@ -207,7 +242,7 @@ function PostalModal(props) {
 			image: imageFile,
 			video: videoFile,
 			description: editorText,
-			user: props.user,
+			user: selectedProfile,
 			timestamp: Firebase.firestore.Timestamp.now(),
 		};
 
@@ -230,11 +265,12 @@ function PostalModal(props) {
 							<select 
 							onChange={e => setSelectedProfile(e.target.value == "" ? {} : props.profiles[e.target.value])}
 							>
-								<option key={-1} value={""}>Select profile to post with</option>
+								<option key={-1} value={""}>Create a profile to post with</option>
 								{props.profiles.map((profile, index) => 
                                     <option key={index} value={index}>{profile.displayName}</option>
                                 )}
 							</select>
+							{Object.keys(selectedProfile).length == 0 && <CreateProfileForm createProfileMethod={props.createProfile}/>}
 							<UserInfo>
 								{Object.keys(selectedProfile).length > 0 ? <img src={selectedProfile.photoURL} alt="" /> : <img src="/images/user.svg" alt="" />}
 								<span>{Object.keys(selectedProfile).length > 0 ? selectedProfile.displayName : "Name"}</span>
@@ -269,6 +305,8 @@ function PostalModal(props) {
 							</Editor>
 						</SharedContent>
 						<ShareCreation>
+							{/* 
+							Firebase storage is not currently working for images and videos
 							<AttachAsset>
 								<AssetButton onClick={() => switchAssetArea("image")}>
 									<img src="/images/share-image.svg" alt="" />
@@ -282,8 +320,8 @@ function PostalModal(props) {
 									<img src="/images/share-comment.svg" alt="" />
 									<span>Anyone</span>
 								</AssetButton>
-							</ShareComment>
-							<PostButton disabled={!editorText ? true : false} onClick={(event) => postArticle(event)}>
+							</ShareComment> */}
+							<PostButton disabled={(!editorText || Object.keys(selectedProfile).length == 0) ? true : false} onClick={(event) => postArticle(event)}>
 								Post
 							</PostButton>
 						</ShareCreation>
@@ -304,6 +342,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		postArticle: (payload) => dispatch(postArticleAPI(payload)),
+		createProfile: (payload) => dispatch(createProfileAPI(payload))
 	};
 };
 

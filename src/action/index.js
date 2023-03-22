@@ -178,3 +178,11 @@ export function getProfilesAPI() {
 		dispatch(setLoading(false));
 	};
 }
+
+export function createProfileAPI(payload) {
+	return (dispatch) => {
+		dispatch(setLoading(true));
+		db.collection("profiles").add(payload);
+		dispatch(setLoading(false));
+	}
+}
