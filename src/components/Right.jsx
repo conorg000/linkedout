@@ -121,7 +121,7 @@ function Right() {
 				</Recommendation>
 			</FollowCard>
 			<BannerCard>
-				<img src="https://static-exp1.licdn.com/scds/common/u/images/promo/ads/li_evergreen_jobs_ad_300x250_v1.jpg" alt="" />
+				<img src="/images/EEAE53ED-2B43-4DF7-BAD0-0F81EE7629DE_4_5005_c.jpeg" alt="" />
 			</BannerCard>
 		</Container>
 	);
