@@ -143,18 +143,36 @@ const NavList = styled.li`
 	}
 `;
 
-const SignOut = styled.div`
+const SignOutContainer = styled.div`
 	position: absolute;
 	top: 45px;
+	background: white;
+	border-radius: 0 0 5px 5px;
+	font-size: 16px;
+	transition-duration: 167ms;
+	display: none;
+	z-index: 15;
+	border: 1px solid #dce6f1;
+`;
+
+const SignOut = styled.div`
+	padding-top: 20px;
 	background: white;
 	border-radius: 0 0 5px 5px;
 	width: 100px;
 	height: 40px;
 	font-size: 16px;
 	text-align: center;
-	transition-duration: 167ms;
-	display: none;
-	z-index: 15;
+`;
+
+const SignIn = styled.div`
+	padding-top: 10px;
+	background: white;
+	border-radius: 0 0 5px 5px;
+	width: 100px;
+	height: 40px;
+	font-size: 16px;
+	text-align: center;
 `;
 
 const SignOutMobile = styled.div`
@@ -177,9 +195,9 @@ const User = styled(NavList)`
 		align-items: center;
 	}
 	&:hover {
-		${SignOut} {
+		${SignOutContainer} {
 			@media (min-width: 768px) {
-				display: flex;
+				display: inline-block;
 				align-items: center;
 				justify-content: center;
 			}
@@ -191,6 +209,10 @@ const Work = styled(User)`
 	border-left: 1px solid rgba(0, 0, 0, 0.08);
 `;
 
+const Form = styled.form`
+	padding: 10px 10px 0px 10px;
+`;
+
 const handleSubmit = (event, signInMethod) => {
 	event.preventDefault();
 	signInMethod(event.target.email.value, event.target.password.value);
@@ -198,21 +220,22 @@ const handleSubmit = (event, signInMethod) => {
 
 const AdminSignInForm = ({signInMethod}) => {
 	return (
-		<form className="form" onSubmit={(event) => handleSubmit(event, signInMethod)}>
+		<Form className="form" onSubmit={(event) => handleSubmit(event, signInMethod)}>
 			<div className="input-group">
-			<label htmlFor="email">Email</label>
-			<input type="email" name="email" placeholder="nome@email.com.br" />
+				<label htmlFor="email">Email</label>
+				<input style={{display: "block"}} type="email" name="email" />
 			</div>
 			<div className="input-group">
-			<label htmlFor="password">Password</label>
-			<input type="password" name="password" />
+				<label htmlFor="password">Password</label>
+				<input  style={{display: "block"}} type="password" name="password" />
 			</div>
-			<button className="primary">Sign In</button>
-		</form>
+			<SignIn><button className="primary">Sign In</button></SignIn>
+		</Form>
 	)
 }
 
 function Header(props) {
+	const adminIsSignedIn = props.user?.email === "ceo@linkedout.company";
 	return (
 		<Container>
 			<Content>
@@ -271,10 +294,15 @@ function Header(props) {
 									Me <img src="/images/down-icon.svg" alt="" />
 								</span>
 							</a>
-							<a onClick={() => props.signOut()}>Sign Out</a>
-							<SignOut>
+							<SignOutContainer>
+								{adminIsSignedIn ? (
+								<SignOut>
+									<button onClick={() => props.signOut()}>Sign Out</button>
+								</SignOut> 
+								): (
 								<AdminSignInForm signInMethod={props.adminSignIn}/>
-							</SignOut>
+								) }
+							</SignOutContainer>
 						</User>
 						<Work>
 							<a>
