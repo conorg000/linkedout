@@ -72,6 +72,7 @@ const ShareBox = styled(CommonBox)`
 
 const Article = styled(CommonBox)`
 	padding: 0;
+	padding-bottom: 5px;
 	margin: 0 0 8px;
 	overflow: visible;
 `;
@@ -129,6 +130,52 @@ const Description = styled.div`
 	overflow: hidden;
 	font-size: 14px;
 	text-align: left;
+`;
+
+const CommentDescription = styled.div`
+	padding: 5px 10px;
+	margin: 10px 10px;
+	border-radius: 10px;
+	overflow: hidden;
+	font-size: 14px;
+	text-align: left;
+	background-color: rgb(242, 242, 242);
+	a {
+		margin-right: 12px;
+		flex-grow: 1;
+		overflow: hidden;
+		display: flex;
+		img {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+		}
+		& > div {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+			flex-basis: 0;
+			margin-left: 8px;
+			overflow: hidden;
+			span {
+				text-align: left;
+				&:first-child {
+					font-size: 14px;
+					font-weight: 700;
+					color: #000;
+				}
+				&:nth-child(n + 2) {
+					font-size: 12px;
+					color: rgba(0, 0, 0, 0.6);
+				}
+				&:nth-child(n + 3) {
+					margin-top: 10px;
+					font-size: 14px;
+					color: black;
+				}
+			}
+		}
+	}
 `;
 
 const SharedImage = styled.div`
@@ -201,6 +248,22 @@ const Content = styled.div`
 		width: 30px;
 	}
 `;
+
+const Comment = ({comment}) => {
+	return (
+		<CommentDescription>
+			<a>
+				{comment.image ? <img src={comment.image} alt="" /> : <img src="/images/user.svg" alt="" />}
+				<div>
+				<span>{comment.actor}</span>
+				<span>{comment.title}</span>
+				{/* <span>{comment.date.toDate().toLocaleDateString()}</span> */}
+				<span>{comment.description}</span>
+			</div>
+			</a>
+		</CommentDescription>
+	)
+}
 
 function Main(props) {
 	const [showModal, setShowModal] = useState("close");
@@ -317,7 +380,7 @@ function Main(props) {
 											</button>
 										</li>
 										<li>
-											<a>{article.comments} comments (currently not working)</a>
+											<a>{article.comments?.length} comments</a>
 										</li>
 									</>
 								)}
@@ -342,6 +405,11 @@ function Main(props) {
 									<span>Send</span>
 								</button>
 							</SocialActions>
+							{article.comments.length > 0 && (
+								article.comments.map(comment => (
+									<Comment comment={comment}></Comment>
+								))
+							)}
 						</Article>
 					))}
 			</Content>
