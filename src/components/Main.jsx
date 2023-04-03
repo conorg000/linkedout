@@ -380,7 +380,9 @@ function Main(props) {
 											</button>
 										</li>
 										<li>
-											<a>{article.comments?.length} comments</a>
+											<button onClick={()=>{}}>
+												<a>{article.comments?.length} comments</a>
+											</button>
 										</li>
 									</>
 								)}
@@ -392,7 +394,7 @@ function Main(props) {
 									</svg>
 									<span>Like</span>
 								</button>
-								<button>
+								<button onClick={()=>{}}>
 									<img src="/images/comment-icon.svg" alt="" />
 									<span>Comment</span>
 								</button>
@@ -405,7 +407,7 @@ function Main(props) {
 									<span>Send</span>
 								</button>
 							</SocialActions>
-							{article.comments.length > 0 && (
+							{(article.comments.length > 0) && (
 								article.comments.map(comment => (
 									<Comment comment={comment}></Comment>
 								))

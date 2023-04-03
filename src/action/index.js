@@ -94,7 +94,7 @@ export function postArticleAPI(payload) {
 							count: 0,
 							whoLiked: [],
 						},
-						comments: 0,
+						comments: [],
 						description: payload.description,
 					});
 					dispatch(setLoading(false));
@@ -115,7 +115,7 @@ export function postArticleAPI(payload) {
 					count: 0,
 					whoLiked: [],
 				},
-				comments: 0,
+				comments: [],
 				description: payload.description,
 			});
 			dispatch(setLoading(false));
@@ -134,7 +134,7 @@ export function postArticleAPI(payload) {
 					count: 0,
 					whoLiked: [],
 				},
-				comments: 0,
+				comments: [],
 				description: payload.description,
 			});
 			dispatch(setLoading(false));
