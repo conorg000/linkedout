@@ -79,6 +79,7 @@ const Content = styled.div`
 
 function Main(props) {
 	const [showModal, setShowModal] = useState("close");
+	const adminIsSignedIn = props.user?.email === "ceo@linkedout.company";
 
 	useEffect(() => {
 		props.getArticles();
@@ -88,6 +89,9 @@ function Main(props) {
 	const clickHandler = (event) => {
 		event.preventDefault();
 		if (event.target !== event.currentTarget) {
+			return;
+		}
+		if(!adminIsSignedIn){
 			return;
 		}
 		switch (showModal) {
