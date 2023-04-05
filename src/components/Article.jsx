@@ -76,6 +76,7 @@ const Description = styled.div`
 	overflow: hidden;
 	font-size: 14px;
 	text-align: left;
+	white-space: pre-wrap;
 `;
 
 const CommentDescription = styled.div`
@@ -85,6 +86,7 @@ const CommentDescription = styled.div`
 	overflow: hidden;
 	font-size: 14px;
 	text-align: left;
+	white-space: pre-wrap;
 	background-color: rgb(242, 242, 242);
 	a {
 		margin-right: 12px;
