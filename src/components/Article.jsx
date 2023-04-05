@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { connect } from "react-redux";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
@@ -157,6 +157,13 @@ const SocialCount = styled.ul`
 	}
 `;
 
+const LikeAndCommentButtons = styled.button`
+    :hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+`
+
 const SocialActions = styled.div`
 	display: flex;
 	align-items: center;
@@ -175,6 +182,9 @@ const SocialActions = styled.div`
 			color: rgba(0, 0, 0, 0.6);
 			font-size: 14px;
 		}
+        :hover {
+            cursor: pointer;
+        }
 	}
 	button.active {
 		span {
@@ -204,6 +214,8 @@ const Comment = ({comment}) => {
 }
 
 function Article(props) {
+    const [showComments, toggleShowComments] = useState(false);
+
     function likeHandler(event) {
 		event.preventDefault();
 		let currentLikes = props.article.likes.count;
@@ -256,16 +268,16 @@ function Article(props) {
             {props.article.likes.count > 0 && (
                 <>
                     <li>
-                        <button>
+                        <LikeAndCommentButtons>
                             <img src="https://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb" alt="" />
                             {/* <img src="https://static-exp1.licdn.com/sc/h/7fx9nkd7mx8avdpqm5hqcbi97" alt="" /> */}
                             <span>{props.article.likes.count}</span>
-                        </button>
+                        </LikeAndCommentButtons>
                     </li>
                     <li>
-                        <button onClick={()=>{}}>
+                        <LikeAndCommentButtons onClick={()=>{toggleShowComments(!showComments)}}>
                             <a>{props.article.comments?.length} comments</a>
-                        </button>
+                        </LikeAndCommentButtons>
                     </li>
                 </>
             )}
@@ -277,7 +289,7 @@ function Article(props) {
                 </svg>
                 <span>Like</span>
             </button>
-            <button onClick={()=>{}}>
+            <button onClick={()=>{toggleShowComments(!showComments)}}>
                 <img src="/images/comment-icon.svg" alt="" />
                 <span>Comment</span>
             </button>
@@ -290,7 +302,7 @@ function Article(props) {
                 <span>Send</span>
             </button>
         </SocialActions>
-        {(props.article.comments.length > 0) && (
+        {showComments && (props.article.comments.length > 0) && (
             props.article.comments.map((comment, key) => (
                 <Comment key={key} comment={comment} />
             ))
