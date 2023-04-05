@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
 import { updateArticleAPI } from "../action";
+import CommentModal from "./CommentModal";
 
 const CommonBox = styled.div`
 	text-align: center;
@@ -215,6 +216,8 @@ const Comment = ({comment}) => {
 
 function Article(props) {
     const [showComments, toggleShowComments] = useState(false);
+    const [showModal, setShowModal] = useState("close");
+	const adminIsSignedIn = props.user?.email === "ceo@linkedout.company";
 
     function likeHandler(event) {
 		event.preventDefault();
@@ -245,6 +248,26 @@ function Article(props) {
 		props.updateLike(payload);
 	}
 
+    const clickHandler = (event) => {
+		event.preventDefault();
+		if(!adminIsSignedIn){
+			toggleShowComments(!showComments);
+			return;
+		}
+		switch (showModal) {
+			case "open":
+				setShowModal("close");
+				break;
+			case "close":
+				toggleShowComments(true);
+				setShowModal("open");
+				break;
+			default:
+				setShowModal("close");
+				break;
+		}
+	};
+
     return (
         <ArticleStyle>
         <SharedActor>
@@ -265,13 +288,13 @@ function Article(props) {
             <a>{!props.article.sharedImg && props.article.video ? <ReactPlayer width={"100%"} url={props.article.video} /> : props.article.sharedImg && <img src={props.article.sharedImg} alt="" />}</a>
         </SharedImage>
         <SocialCount>
-            {props.article.likes.count > 0 && (
+            {((props.article.comments.length > 0) || (props.article.likes.count > 0)) && (
                 <>
                     <li>
                         <LikeAndCommentButtons>
                             <img src="https://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb" alt="" />
                             {/* <img src="https://static-exp1.licdn.com/sc/h/7fx9nkd7mx8avdpqm5hqcbi97" alt="" /> */}
-                            <span>{props.article.likes.count}</span>
+                            <span>{props.article.likes.count === 0 ? "" : props.article.likes.count}</span>
                         </LikeAndCommentButtons>
                     </li>
                     <li>
@@ -289,8 +312,8 @@ function Article(props) {
                 </svg>
                 <span>Like</span>
             </button>
-            <button onClick={()=>{toggleShowComments(!showComments)}}>
-                <img src="/images/comment-icon.svg" alt="" />
+            <button onClick={clickHandler}>
+                <img id="commentButton" src="/images/comment-icon.svg" alt="" />
                 <span>Comment</span>
             </button>
             <button>
@@ -307,6 +330,7 @@ function Article(props) {
                 <Comment key={key} comment={comment} />
             ))
         )}
+		<CommentModal showModal={showModal} clickHandler={clickHandler} article={props.article} articleId={props.articleId} />
     </ArticleStyle>
     )
 }

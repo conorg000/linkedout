@@ -3,7 +3,7 @@ import ReactPlayer from "react-player";
 import { connect } from "react-redux";
 import Firebase from "firebase";
 import styled from "styled-components";
-import { createProfileAPI, postArticleAPI } from "../action";
+import { createProfileAPI, updateArticleAPI } from "../action";
 
 const Container = styled.div`
 	position: fixed;
@@ -232,21 +232,36 @@ function CommentModal(props) {
 		setAssetArea(area);
 	}
 
-	function postArticle(event) {
+	function postComment(event) {
 		event.preventDefault();
 		if (event.target !== event.currentTarget) {
 			return;
 		}
 
-		const payload = {
-			image: imageFile,
-			video: videoFile,
+		// Get current comment array
+		let currentCommentArray = props.article.comments;
+
+		// Make comment object
+		let newComment = {
+			actor: selectedProfile.displayName,
+			date: Firebase.firestore.Timestamp.now(),
 			description: editorText,
-			user: selectedProfile,
-			timestamp: Firebase.firestore.Timestamp.now(),
+			image: selectedProfile.photoURL,
+			title: selectedProfile.headline
 		};
 
-		props.postArticle(payload);
+		// Add comment object to existing comments
+		currentCommentArray.push(newComment);
+
+		// Make payload
+		const payload = {
+			update: {
+				comments: currentCommentArray
+			},
+			id: props.articleId
+		};
+
+		props.postComment(payload);
 		reset(event);
 	}
 
@@ -256,7 +271,7 @@ function CommentModal(props) {
 				<Container>
 					<Content>
 						<Header>
-							<h2>Create a post</h2>
+							<h2>Create a comment</h2>
 							<button onClick={(event) => reset(event)}>
 								<img src="/images/close-icon.svg" alt="" />
 							</button>
@@ -265,7 +280,7 @@ function CommentModal(props) {
 							<select 
 							onChange={e => setSelectedProfile(e.target.value == "" ? {} : props.profiles[e.target.value])}
 							>
-								<option key={-1} value={""}>Create a profile to post with</option>
+								<option key={-1} value={""}>Create a profile to comment with</option>
 								{props.profiles.map((profile, index) => 
                                     <option key={index} value={index}>{profile.displayName}</option>
                                 )}
@@ -321,8 +336,8 @@ function CommentModal(props) {
 									<span>Anyone</span>
 								</AssetButton>
 							</ShareComment> */}
-							<PostButton disabled={(!editorText || Object.keys(selectedProfile).length == 0) ? true : false} onClick={(event) => postArticle(event)}>
-								Post
+							<PostButton disabled={(!editorText || Object.keys(selectedProfile).length == 0) ? true : false} onClick={(event) => postComment(event)}>
+								Comment
 							</PostButton>
 						</ShareCreation>
 					</Content>
@@ -341,7 +356,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		postArticle: (payload) => dispatch(postArticleAPI(payload)),
+		postComment: (payload) => dispatch(updateArticleAPI(payload)),
 		createProfile: (payload) => dispatch(createProfileAPI(payload))
 	};
 };
