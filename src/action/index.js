@@ -2,7 +2,7 @@ import db, { auth, provider, storage } from "../firebase";
 import { defaultUser } from "../reducers/userReducer";
 import { SET_LOADING_STATUS, SET_USER, GET_ARTICLES, GET_PROFILES } from "./actionType";
 
-const chatbergPhotoURL = "https://scontent.fcmb2-2.fna.fbcdn.net/v/t1.15752-9/324408264_874646100250144_7121169071065042943_n.jpg?stp=dst-jpg_p100x100&_nc_cat=102&ccb=1-7&_nc_sid=4de414&_nc_eui2=AeFvNJ6wuW1TZ1gTT9o-iTHYdl4gf0Tnhux2XiB_ROeG7CbJvOkJadQ8eyu2Vuuw0D0&_nc_ohc=5RrcM9QJSiIAX-i-gPE&_nc_ht=scontent.fcmb2-2.fna&oh=03_AdRufm-i0pSUQcUaRUsotoA-rW0uqYgxNRedKcHp3uEVUA&oe=644522C4";
+const chatbergPhotoURL = "/images/chatbergh.jpeg";
 const chatbergDisplayName = "chatberg";
 
 export function setUser(payload) {
