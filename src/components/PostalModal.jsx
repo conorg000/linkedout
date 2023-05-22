@@ -207,6 +207,7 @@ function PostalModal(props) {
 	const [videoFile, setVideoFile] = useState("");
 	const [assetArea, setAssetArea] = useState("");
 	const [selectedProfile, setSelectedProfile] = useState({});
+	const [selectedProfileId, setSelectedProfileId] = useState("");
 
 	const reset = (event) => {
 		setEditorText("");
@@ -242,7 +243,7 @@ function PostalModal(props) {
 			image: imageFile,
 			video: videoFile,
 			description: editorText,
-			user: selectedProfile,
+			user: selectedProfileId,
 			timestamp: Firebase.firestore.Timestamp.now(),
 		};
 
@@ -263,7 +264,10 @@ function PostalModal(props) {
 						</Header>
 						<SharedContent>
 							<select 
-							onChange={e => setSelectedProfile(e.target.value == "" ? {} : props.profiles[e.target.value])}
+							onChange={e => {
+								setSelectedProfile(e.target.value == "" ? {} : props.profiles[e.target.value]);
+								setSelectedProfileId(e.target.value == "" ? {} : props.profileIds[e.target.value]);
+							}}
 							>
 								<option key={-1} value={""}>Create a profile to post with</option>
 								{props.profiles.map((profile, index) => 
@@ -335,7 +339,8 @@ function PostalModal(props) {
 const mapStateToProps = (state) => {
 	return {
 		user: state.userState.user,
-		profiles: state.profileState.profiles
+		profiles: state.profileState.profiles,
+		profileIds: state.profileState.ids
 	};
 };
 

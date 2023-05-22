@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { updateArticleAPI } from "../action";
 import CommentModal from "./CommentModal";
 import LikedModal from "./LikeModal";
+import { useEffect } from "react";
 
 const CommonBox = styled.div`
 	text-align: center;
@@ -225,7 +226,16 @@ function Article(props) {
     const [showComments, toggleShowComments] = useState(false);
     const [showLikeForm, toggleShowLikeForm] = useState("close");
     const [showModal, setShowModal] = useState("close");
+	const [articleActor, setArticleActor] = useState({});
 	const adminIsSignedIn = props.user?.email === "ceo@linkedout.company";
+
+	useEffect(() => {
+		if(props.profiles && props.profileIds){
+			const actorId = props.article.actor.id;
+			const actorDetails = props.profiles[props.profileIds.indexOf(actorId)];
+			setArticleActor(actorDetails);
+		}
+	}, [props.profiles, props.profileIds, props.article.actor]);
 
     const likedClickHandler = (event) => {
 		event.preventDefault();
@@ -269,10 +279,10 @@ function Article(props) {
         <ArticleStyle>
         <SharedActor>
             <a>
-                {props.article.actor.image ? <img src={props.article.actor.image} alt="" /> : <img src="/images/user.svg" alt="" />}
+                {articleActor.photoURL ? <img src={articleActor.photoURL} alt="" /> : <img src="/images/user.svg" alt="" />}
                 <div>
-                    <span>{props.article.actor.title}</span>
-                    <span>{props.article.actor.description}</span>
+                    <span>{articleActor.displayName}</span>
+                    <span>{articleActor.headline}</span>
                     <span>{props.article.actor.date.toDate().toLocaleDateString()}</span>
                 </div>
             </a>
@@ -334,7 +344,10 @@ function Article(props) {
 }
 
 const mapStateToProps = (state) => {
-	return {};
+	return {
+		profiles: state.profileState.profiles,
+		profileIds: state.profileState.ids
+	};
 };
 
 const mapDispatchToProps = (dispatch) => ({

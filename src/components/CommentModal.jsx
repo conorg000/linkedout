@@ -350,7 +350,8 @@ function CommentModal(props) {
 const mapStateToProps = (state) => {
 	return {
 		user: state.userState.user,
-		profiles: state.profileState.profiles
+		profiles: state.profileState.profiles,
+		profileIds: state.profileState.ids
 	};
 };
 

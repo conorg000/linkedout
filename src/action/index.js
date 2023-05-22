@@ -83,10 +83,8 @@ export function postArticleAPI(payload) {
 					const downloadURL = await upload.snapshot.ref.getDownloadURL();
 					db.collection("articles").add({
 						actor: {
-							description: payload.user.headline,
-							title: payload.user.displayName,
+							id: payload.user,
 							date: payload.timestamp,
-							image: payload.user.photoURL,
 						},
 						video: payload.video,
 						sharedImg: downloadURL,
@@ -104,10 +102,8 @@ export function postArticleAPI(payload) {
 			dispatch(setLoading(true));
 			db.collection("articles").add({
 				actor: {
-					description: payload.user.headline,
-					title: payload.user.displayName,
+					id: payload.user,
 					date: payload.timestamp,
-					image: payload.user.photoURL,
 				},
 				video: payload.video,
 				sharedImg: "",
@@ -123,10 +119,8 @@ export function postArticleAPI(payload) {
 			dispatch(setLoading(true));
 			db.collection("articles").add({
 				actor: {
-					description: payload.user.headline,
-					title: payload.user.displayName,
+					id: payload.user,
 					date: payload.timestamp,
-					image: payload.user.photoURL,
 				},
 				video: "",
 				sharedImg: "",
