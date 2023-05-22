@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
+import "firebase/analytics";
 
 
 const firebaseConfig = {
@@ -18,6 +19,7 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 const storage = firebase.storage();
+const analytics = firebase.analytics();
 
-export { auth, provider, storage };
+export { auth, provider, storage, analytics };
 export default db;

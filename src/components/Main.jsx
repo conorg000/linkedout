@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { getArticlesAPI, getProfilesAPI } from "../action";
 import PostalModal from "./PostalModal";
 import Article from "./Article";
+import { analytics } from "../firebase";
 
 const Container = styled.div`
 	grid-area: main;
@@ -84,6 +85,7 @@ function Main(props) {
 	useEffect(() => {
 		props.getArticles();
 		props.getProfiles();
+		analytics.logEvent("main_page_loaded");
 	}, []);
 
 	const clickHandler = (event) => {
