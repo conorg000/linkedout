@@ -207,6 +207,7 @@ function CommentModal(props) {
 	const [videoFile, setVideoFile] = useState("");
 	const [assetArea, setAssetArea] = useState("");
 	const [selectedProfile, setSelectedProfile] = useState({});
+	const [selectedProfileId, setSelectedProfileId] = useState("");
 
 	const reset = (event) => {
 		setEditorText("");
@@ -243,11 +244,9 @@ function CommentModal(props) {
 
 		// Make comment object
 		let newComment = {
-			actor: selectedProfile.displayName,
+			id: selectedProfileId,
 			date: Firebase.firestore.Timestamp.now(),
 			description: editorText,
-			image: selectedProfile.photoURL,
-			title: selectedProfile.headline
 		};
 
 		// Add comment object to existing comments
@@ -278,7 +277,10 @@ function CommentModal(props) {
 						</Header>
 						<SharedContent>
 							<select 
-							onChange={e => setSelectedProfile(e.target.value == "" ? {} : props.profiles[e.target.value])}
+							onChange={e => {
+								setSelectedProfile(e.target.value == "" ? {} : props.profiles[e.target.value]);
+								setSelectedProfileId(e.target.value == "" ? {} : props.profileIds[e.target.value]);
+							}}
 							>
 								<option key={-1} value={""}>Create a profile to comment with</option>
 								{props.profiles.map((profile, index) => 

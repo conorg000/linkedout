@@ -153,8 +153,7 @@ export function getArticlesAPI() {
 }
 
 export function updateArticleAPI(payload) {
-	console.log("updating article");
-	console.log(payload);
+
 	return (dispatch) => {
 		db.collection("articles").doc(payload.id).update(payload.update);
 	};

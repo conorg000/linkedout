@@ -178,16 +178,12 @@ function LikeModal(props) {
 		event.preventDefault();
 
         if(isNaN(editorText) || isNaN(parseFloat(editorText))){
-            console.log('help')
             return;
         }
 
 		// Get current article
 		let currentLikeObject = props.article.likes;
-        console.log("current like obj: ")
-        console.log(currentLikeObject);
 
-        console.log(editorText);
         let newLikeCount = editorText;
 
 		// Make new article object
@@ -195,8 +191,6 @@ function LikeModal(props) {
             count: newLikeCount,
             whoLiked: currentLikeObject.whoLiked
 		};
-
-        console.log(newLikedObject);
 
 		// Make payload
 		const payload = {

@@ -66,12 +66,6 @@ function Home(props) {
 		<Container>
 			{!props.user && <Redirect to="/" />}
 			<Content>
-				<Section>
-					<h5>
-						<a>Hiring in a hurry..?</a>
-					</h5>
-					<p>- Find talented pros in record time with LinkedOut and fire them when the project is finished.</p>
-				</Section>
 				<Layout>
 					<Left />
 					<Main />

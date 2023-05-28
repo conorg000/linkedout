@@ -202,14 +202,22 @@ const SocialActions = styled.div`
 	}
 `;
 
-const Comment = ({comment}) => {
+const Comment = ({comment, profiles, profileIds}) => {
+	const [commentActor, setCommentActor] = useState({});
+	useEffect(() => {
+		if(profiles && profileIds){
+			const actorId = comment.id;
+			const actorDetails = profiles[profileIds.indexOf(actorId)];
+			setCommentActor(actorDetails);
+		}
+	}, [profiles, profileIds, comment]);
 	return (
 		<CommentDescription>
 			<a>
-				{comment.image ? <img src={comment.image} alt="" /> : <img src="/images/user.svg" alt="" />}
+				{commentActor.photoURL ? <img src={commentActor.photoURL} alt="" /> : <img src="/images/user.svg" alt="" />}
 				<div>
-				<span>{comment.actor}</span>
-				<span>{comment.title}</span>
+				<span>{commentActor.displayName}</span>
+				<span>{commentActor.headline}</span>
 				{/* <span>{comment.date.toDate().toLocaleDateString()}</span> */}
 				<span>{comment.description}</span>
 			</div>
@@ -334,7 +342,7 @@ function Article(props) {
         </SocialActions>
         {showComments && (props.article.comments.length > 0) && (
             props.article.comments.map((comment, key) => (
-                <Comment key={key} comment={comment} />
+                <Comment key={key} comment={comment} profiles={props.profiles} profileIds={props.profileIds} />
             ))
         )}
 		<CommentModal showModal={showModal} clickHandler={clickHandler} article={props.article} articleId={props.articleId} />
