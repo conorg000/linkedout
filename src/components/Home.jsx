@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router";
 import styled from "styled-components";
 import Left from "./Left";
 import Main from "./Main";
@@ -58,13 +57,13 @@ const Layout = styled.div`
 		display: flex;
 		flex-direction: column;
 		padding: 0 5px;
+		padding-bottom: 72px;
 	}
 `;
 
 function Home(props) {
 	return (
 		<Container>
-			{!props.user && <Redirect to="/" />}
 			<Content>
 				<Layout>
 					<Left />

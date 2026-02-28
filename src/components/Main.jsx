@@ -71,6 +71,30 @@ const ShareBox = styled(CommonBox)`
 	}
 `;
 
+const SortBar = styled.div`
+	display: flex;
+	align-items: center;
+	margin: 8px 0;
+	hr {
+		flex-grow: 1;
+		border: none;
+		border-top: 1px solid rgba(0, 0, 0, 0.15);
+	}
+	span {
+		font-size: 12px;
+		color: rgba(0, 0, 0, 0.6);
+		margin-left: 8px;
+		white-space: nowrap;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		strong {
+			color: rgba(0, 0, 0, 0.9);
+			margin-left: 4px;
+		}
+	}
+`;
+
 const Content = styled.div`
 	text-align: center;
 	& > img {
@@ -120,16 +144,12 @@ function Main(props) {
 				</div>
 				<div>
 					<button>
-						<img src="/images/photo-icon.svg" alt="" />
-						<span>Photo</span>
-					</button>
-					<button>
 						<img src="/images/video-icon.svg" alt="" />
 						<span>Video</span>
 					</button>
 					<button>
-						<img src="/images/event-icon.svg" alt="" />
-						<span>Event</span>
+						<img src="/images/photo-icon.svg" alt="" />
+						<span>Photo</span>
 					</button>
 					<button>
 						<img src="/images/article-icon.svg" alt="" />
@@ -137,6 +157,10 @@ function Main(props) {
 					</button>
 				</div>
 			</ShareBox>
+			<SortBar>
+				<hr />
+				<span>Sort by: <strong>Top</strong> ▾</span>
+			</SortBar>
 			<Content>
 				{props.loading && <img src="/images/spin-loader.gif" alt="" />}
 				{props.articles.length > 0 &&

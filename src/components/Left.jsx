@@ -4,6 +4,17 @@ import styled from "styled-components";
 
 const Container = styled.div`
 	grid-area: left;
+	position: sticky;
+	top: 60px;
+	align-self: start;
+	max-height: calc(100vh - 68px);
+	overflow-y: auto;
+	&::-webkit-scrollbar {
+		width: 0;
+	}
+	@media (max-width: 768px) {
+		display: none;
+	}
 `;
 
 const ArtCard = styled.div`
@@ -43,18 +54,23 @@ const Photo = styled.div`
 	background-clip: content-box;
 	background-color: #fff;
 	background-position: center;
-	/* background-size: 60%; */
 	background-repeat: no-repeat;
 	border: 2px solid white;
 	margin: -38px auto 12px;
 	border-radius: 50%;
 `;
 
-const Link = styled.div`
+const NameLink = styled.div`
 	font-size: 16px;
 	line-height: 1.5;
 	color: rgba(0, 0, 0, 0.9);
 	font-weight: 600;
+`;
+
+const Headline = styled.div`
+	font-size: 12px;
+	color: rgba(0, 0, 0, 0.6);
+	margin-top: 2px;
 `;
 
 const AddPhotoText = styled.div`
@@ -74,6 +90,7 @@ const Widget = styled.div`
 		justify-content: space-between;
 		align-items: center;
 		padding: 4px 12px;
+		cursor: pointer;
 		&:hover {
 			background-color: rgba(0, 0, 0, 0.08);
 		}
@@ -88,11 +105,17 @@ const Widget = styled.div`
 					color: rgba(0, 0, 0, 0.6);
 				}
 				&:nth-child(2) {
-					color: #000;
+					color: rgba(0, 0, 0, 0.9);
+					font-weight: 600;
 				}
 			}
 		}
 	}
+`;
+
+const ViewerCount = styled.span`
+	color: #0a66c2;
+	font-weight: 600;
 `;
 
 const Item = styled.a`
@@ -101,12 +124,33 @@ const Item = styled.a`
 	text-align: left;
 	padding: 12px;
 	font-size: 12px;
+	cursor: pointer;
 	span {
 		display: flex;
 		align-items: center;
 	}
 	&:hover {
 		background-color: rgba(0, 0, 0, 0.08);
+	}
+`;
+
+const PremiumPromo = styled.a`
+	display: block;
+	padding: 12px;
+	font-size: 12px;
+	color: rgba(0, 0, 0, 0.6);
+	cursor: pointer;
+	border-top: 1px solid rgba(0, 0, 0, 0.15);
+	&:hover {
+		background-color: rgba(0, 0, 0, 0.08);
+	}
+	span {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+	strong {
+		color: #915907;
 	}
 `;
 
@@ -119,6 +163,7 @@ const CommunityCard = styled(ArtCard)`
 		color: #000;
 		padding: 4px 12px;
 		font-size: 12px;
+		cursor: pointer;
 		&:hover {
 			color: #0a66c2;
 		}
@@ -147,12 +192,22 @@ function Left(props) {
 					<CardBackground />
 					<a>
 						<Photo photoUrl={photoUrl} />
-						<Link>Welcome, {props.user ? props.user.displayName : "there"}!</Link>
+						<NameLink>Welcome, {props.user ? props.user.displayName : "there"}!</NameLink>
+						<Headline>Disrupting the disruption industry</Headline>
 					</a>
 					<a>
 						<AddPhotoText>Add a photo</AddPhotoText>
 					</a>
 				</UserInfo>
+				<Widget>
+					<a>
+						<div>
+							<span>Profile viewers</span>
+							<span>36</span>
+						</div>
+						<ViewerCount>View all analytics</ViewerCount>
+					</a>
+				</Widget>
 				<Widget>
 					<a>
 						<div>
@@ -168,6 +223,11 @@ function Left(props) {
 						My Items
 					</span>
 				</Item>
+				<PremiumPromo>
+					<span>
+						<strong>Grow your career with Premium</strong>
+					</span>
+				</PremiumPromo>
 			</ArtCard>
 			<CommunityCard>
 				<a>
@@ -181,6 +241,9 @@ function Left(props) {
 				</a>
 				<a>
 					<span>Follow Hashtags</span>
+				</a>
+				<a>
+					<span>Newsletters</span>
 				</a>
 				<a>
 					<span>Discover More</span>

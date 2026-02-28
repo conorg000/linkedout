@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { signInAPI, signOutAPI } from "../action";
 
@@ -10,8 +11,10 @@ const Container = styled.div`
 	position: sticky;
 	top: 0;
 	left: 0;
-	/* width: 100vw; */
 	z-index: 10;
+	@media (max-width: 768px) {
+		padding: 0 12px;
+	}
 `;
 
 const Content = styled.div`
@@ -25,6 +28,9 @@ const Content = styled.div`
 const Logo = styled.span`
 	margin-right: 8px;
 	font-size: 0;
+	a {
+		display: flex;
+	}
 `;
 
 const Search = styled.div`
@@ -75,11 +81,7 @@ const Nav = styled.nav`
 	margin-left: auto;
 	display: block;
 	@media (max-width: 768px) {
-		position: fixed;
-		left: 0;
-		bottom: 0;
-		background: white;
-		width: 100%;
+		display: none;
 	}
 `;
 
@@ -119,18 +121,12 @@ const NavList = styled.li`
 		min-width: 80px;
 		position: relative;
 		text-decoration: none;
+		cursor: pointer;
 		span {
 			color: rgba(0, 0, 0, 0.6);
 			display: flex;
 			align-items: center;
 			text-align: center;
-		}
-		@media (max-width: 768px) {
-			min-width: 50px;
-			font-size: 9px;
-			span > img {
-				width: 40%;
-			}
 		}
 	}
 	&:hover,
@@ -143,26 +139,122 @@ const NavList = styled.li`
 	}
 `;
 
+const BadgeContainer = styled.div`
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`;
+
+const Badge = styled.span`
+	position: absolute;
+	top: -6px;
+	right: -6px;
+	background: #cc1016;
+	&& {
+		color: #fff;
+	}
+	font-size: 9px;
+	font-weight: 700;
+	min-width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 4px;
+	line-height: 1;
+`;
+
 const SignOutContainer = styled.div`
 	position: absolute;
-	top: 45px;
+	top: 52px;
+	right: 0;
 	background: white;
-	border-radius: 0 0 5px 5px;
-	font-size: 16px;
+	border-radius: 0 0 8px 8px;
+	font-size: 14px;
 	transition-duration: 167ms;
 	display: none;
 	z-index: 15;
-	border: 1px solid #dce6f1;
+	box-shadow: 0 0 0 1px rgb(0 0 0 / 15%), 0 6px 9px rgb(0 0 0 / 20%);
+	width: 280px;
 `;
 
-const SignOut = styled.div`
-	padding-top: 20px;
-	background: white;
-	border-radius: 0 0 5px 5px;
-	width: 100px;
-	height: 40px;
-	font-size: 16px;
+const MeDropdownContent = styled.div`
+	padding: 0;
+`;
+
+const ProfileCard = styled.div`
+	padding: 16px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	img {
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+	div {
+		h4 {
+			font-size: 16px;
+			font-weight: 600;
+			color: rgba(0, 0, 0, 0.9);
+		}
+		p {
+			font-size: 12px;
+			color: rgba(0, 0, 0, 0.6);
+			margin-top: 2px;
+		}
+	}
+`;
+
+const ViewProfileButton = styled(Link)`
+	display: block;
+	margin: 12px 16px;
+	padding: 4px 16px;
+	border: 1px solid #0a66c2;
+	border-radius: 16px;
+	color: #0a66c2;
+	font-size: 14px;
+	font-weight: 600;
 	text-align: center;
+	text-decoration: none;
+	&:hover {
+		background: rgba(112, 181, 249, 0.15);
+		border-color: #004182;
+	}
+`;
+
+const DropdownSection = styled.div`
+	padding: 8px 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	&:last-child {
+		border-bottom: none;
+	}
+	h5 {
+		font-size: 14px;
+		font-weight: 600;
+		color: rgba(0, 0, 0, 0.9);
+		padding: 4px 16px;
+	}
+	a, button {
+		display: block;
+		width: 100%;
+		padding: 4px 16px;
+		font-size: 14px;
+		color: rgba(0, 0, 0, 0.6);
+		text-decoration: none;
+		background: none;
+		border: none;
+		text-align: left;
+		cursor: pointer;
+		line-height: 2;
+		&:hover {
+			background: rgba(0, 0, 0, 0.08);
+		}
+	}
 `;
 
 const SignIn = styled.div`
@@ -173,15 +265,6 @@ const SignIn = styled.div`
 	height: 40px;
 	font-size: 16px;
 	text-align: center;
-`;
-
-const SignOutMobile = styled.div`
-	display: none;
-	@media (max-width: 768px) {
-		display: flex;
-		padding-left: 1rem;
-		font-size: 14px;
-	}
 `;
 
 const User = styled(NavList)`
@@ -197,9 +280,7 @@ const User = styled(NavList)`
 	&:hover {
 		${SignOutContainer} {
 			@media (min-width: 768px) {
-				display: inline-block;
-				align-items: center;
-				justify-content: center;
+				display: block;
 			}
 		}
 	}
@@ -209,113 +290,274 @@ const Work = styled(User)`
 	border-left: 1px solid rgba(0, 0, 0, 0.08);
 `;
 
+const PremiumLink = styled(NavList)`
+	a {
+		color: #915907;
+		font-size: 12px;
+		min-width: auto;
+		padding: 0 8px;
+		text-decoration: underline;
+		span {
+			color: #915907;
+		}
+	}
+	@media (max-width: 960px) {
+		display: none;
+	}
+`;
+
 const Form = styled.form`
 	padding: 10px 10px 0px 10px;
+`;
+
+const MobileNav = styled.nav`
+	display: none;
+	@media (max-width: 768px) {
+		display: flex;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: #fff;
+		border-top: 1px solid rgba(0, 0, 0, 0.08);
+		z-index: 10;
+		justify-content: space-around;
+		align-items: center;
+		height: 52px;
+		padding-bottom: env(safe-area-inset-bottom, 0);
+	}
+`;
+
+const MobileNavItem = styled(Link)`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	font-size: 10px;
+	color: ${props => props.$active ? "rgba(0,0,0,0.9)" : "rgba(0,0,0,0.6)"};
+	min-width: 50px;
+	padding: 6px 0;
+	position: relative;
+	img {
+		width: 24px;
+		height: 24px;
+		opacity: ${props => props.$active ? 1 : 0.6};
+	}
+	span {
+		margin-top: 2px;
+	}
+	&::after {
+		content: "";
+		display: ${props => props.$active ? "block" : "none"};
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 60%;
+		height: 2px;
+		background: rgba(0,0,0,0.9);
+	}
+`;
+
+const MobilePostButton = styled.button`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: none;
+	border: none;
+	font-size: 10px;
+	color: rgba(0,0,0,0.6);
+	min-width: 50px;
+	padding: 6px 0;
+	cursor: pointer;
+`;
+
+const PostIcon = styled.div`
+	width: 24px;
+	height: 24px;
+	border-radius: 4px;
+	border: 2px solid rgba(0,0,0,0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 18px;
+	line-height: 1;
+	color: rgba(0,0,0,0.6);
 `;
 
 const handleSubmit = (event, signInMethod) => {
 	event.preventDefault();
 	signInMethod(event.target.email.value, event.target.password.value);
-}	
+};
 
-const AdminSignInForm = ({signInMethod}) => {
+const AdminSignInForm = ({ signInMethod }) => {
 	return (
 		<Form className="form" onSubmit={(event) => handleSubmit(event, signInMethod)}>
 			<div className="input-group">
 				<label htmlFor="email">Email</label>
-				<input style={{display: "block"}} type="email" name="email" />
+				<input style={{ display: "block" }} type="email" name="email" />
 			</div>
 			<div className="input-group">
 				<label htmlFor="password">Password</label>
-				<input  style={{display: "block"}} type="password" name="password" />
+				<input style={{ display: "block" }} type="password" name="password" />
 			</div>
-			<SignIn><button className="primary">Sign In</button></SignIn>
+			<SignIn>
+				<button className="primary">Sign In</button>
+			</SignIn>
 		</Form>
-	)
-}
+	);
+};
 
 function Header(props) {
 	const adminIsSignedIn = props.user?.email === "ceo@linkedout.company";
+	const location = useLocation();
+	const currentPath = location.pathname;
+
+	const isActive = (path) => {
+		if (path === "/feed") return currentPath === "/feed" || currentPath === "/";
+		return currentPath.startsWith(path);
+	};
+
 	return (
-		<Container>
-			<Content>
-				<Logo>
-					<a href="/feed">
-						<img src="/images/linkedoutsmall.png" alt="" height="40" />
-					</a>
-				</Logo>
-				<Search>
-					<div>
-						<input type="text" placeholder="Search" />
-					</div>
-					<SearchIcon>
-						<img src="/images/search-icon.svg" alt="" />
-					</SearchIcon>
-				</Search>
-				<SignOutMobile onClick={() => props.signOut()}>
-					<a>Admin Sign In</a>
-				</SignOutMobile>
-				<Nav>
-					<NavListWrap>
-						<NavList className="active">
-							<a href="/feed">
-								<img src="/images/nav-home.svg" alt="" />
-								<span>Home</span>
-							</a>
-						</NavList>
-						<NavList>
-							<a href="/feed">
-								<img src="/images/nav-network.svg" alt="" />
-								<span>My Network</span>
-							</a>
-						</NavList>
-						<NavList>
-							<a href="/feed">
-								<img src="/images/nav-jobs.svg" alt="" />
-								<span>Jobs</span>
-							</a>
-						</NavList>
-						<NavList>
-							<a href="/feed">
-								<img src="/images/nav-messaging.svg" alt="" />
-								<span>Messaging</span>
-							</a>
-						</NavList>
-						<NavList>
-							<a href="/feed">
-								<img src="/images/nav-notifications.svg" alt="" />
-								<span>Notifications</span>
-							</a>
-						</NavList>
-						<User>
-							<a>
-								{props.user && props.user.photoURL ? <img src={props.user.photoURL} alt="" /> : <img src="/images/user.svg" alt="" />}
-								<span>
-									Me <img src="/images/down-icon.svg" alt="" />
-								</span>
-							</a>
-							<SignOutContainer>
-								{adminIsSignedIn ? (
-								<SignOut>
-									<button onClick={() => props.signOut()}>Sign Out</button>
-								</SignOut> 
-								): (
-								<AdminSignInForm signInMethod={props.adminSignIn}/>
-								) }
-							</SignOutContainer>
-						</User>
-						<Work>
-							<a>
-								<img src="/images/nav-work.svg" alt="" />
-								<span>
-									Work <img src="/images/down-icon.svg" alt="" />
-								</span>
-							</a>
-						</Work>
-					</NavListWrap>
-				</Nav>
-			</Content>
-		</Container>
+		<>
+			<Container>
+				<Content>
+					<Logo>
+						<Link to="/feed">
+							<img src="/images/linkedoutsmall.png" alt="" height="40" />
+						</Link>
+					</Logo>
+					<Search>
+						<div>
+							<input type="text" placeholder="Search" />
+						</div>
+						<SearchIcon>
+							<img src="/images/search-icon.svg" alt="" />
+						</SearchIcon>
+					</Search>
+					<Nav>
+						<NavListWrap>
+							<NavList className={isActive("/feed") ? "active" : ""}>
+								<Link to="/feed">
+									<img src="/images/nav-home.svg" alt="" />
+									<span>Home</span>
+								</Link>
+							</NavList>
+							<NavList className={isActive("/mynetwork") ? "active" : ""}>
+								<Link to="/mynetwork">
+									<img src="/images/nav-network.svg" alt="" />
+									<span>My Network</span>
+								</Link>
+							</NavList>
+							<NavList className={isActive("/jobs") ? "active" : ""}>
+								<Link to="/jobs">
+									<img src="/images/nav-jobs.svg" alt="" />
+									<span>Jobs</span>
+								</Link>
+							</NavList>
+							<NavList className={isActive("/messaging") ? "active" : ""}>
+								<Link to="/messaging">
+									<BadgeContainer>
+										<img src="/images/nav-messaging.svg" alt="" />
+										<Badge>7</Badge>
+									</BadgeContainer>
+									<span>Messaging</span>
+								</Link>
+							</NavList>
+							<NavList className={isActive("/notifications") ? "active" : ""}>
+								<Link to="/notifications">
+									<BadgeContainer>
+										<img src="/images/nav-notifications.svg" alt="" />
+										<Badge>14</Badge>
+									</BadgeContainer>
+									<span>Notifications</span>
+								</Link>
+							</NavList>
+							<User>
+								<a>
+									{props.user && props.user.photoURL ? (
+										<img src={props.user.photoURL} alt="" />
+									) : (
+										<img src="/images/user.svg" alt="" />
+									)}
+									<span>
+										Me <img src="/images/down-icon.svg" alt="" />
+									</span>
+								</a>
+								<SignOutContainer>
+									{adminIsSignedIn ? (
+										<MeDropdownContent>
+											<ProfileCard>
+												<img src={props.user.photoURL || "/images/user.svg"} alt="" />
+												<div>
+													<h4>{props.user.displayName}</h4>
+													<p>Disrupting the disruption industry</p>
+												</div>
+											</ProfileCard>
+											<ViewProfileButton to="/profile/admin">View Profile</ViewProfileButton>
+											<DropdownSection>
+												<h5>Account</h5>
+												<a href="#">Try 1 month of Premium for A$0</a>
+												<a href="#">Settings & Privacy</a>
+												<a href="#">Help</a>
+												<a href="#">Language</a>
+											</DropdownSection>
+											<DropdownSection>
+												<h5>Manage</h5>
+												<a href="#">Posts & Activity</a>
+												<a href="#">Job Posting Account</a>
+											</DropdownSection>
+											<DropdownSection>
+												<button onClick={() => props.signOut()}>Sign Out</button>
+											</DropdownSection>
+										</MeDropdownContent>
+									) : (
+										<AdminSignInForm signInMethod={props.adminSignIn} />
+									)}
+								</SignOutContainer>
+							</User>
+							<Work>
+								<a>
+									<img src="/images/nav-work.svg" alt="" />
+									<span>
+										Work <img src="/images/down-icon.svg" alt="" />
+									</span>
+								</a>
+							</Work>
+							<PremiumLink>
+								<a href="#">
+									<span>Try Premium</span>
+								</a>
+							</PremiumLink>
+						</NavListWrap>
+					</Nav>
+				</Content>
+			</Container>
+			<MobileNav>
+				<MobileNavItem to="/feed" $active={isActive("/feed")}>
+					<img src="/images/nav-home.svg" alt="" />
+					<span>Home</span>
+				</MobileNavItem>
+				<MobileNavItem to="/mynetwork" $active={isActive("/mynetwork")}>
+					<img src="/images/nav-network.svg" alt="" />
+					<span>My Network</span>
+				</MobileNavItem>
+				<MobilePostButton>
+					<PostIcon>+</PostIcon>
+					<span>Post</span>
+				</MobilePostButton>
+				<MobileNavItem to="/notifications" $active={isActive("/notifications")}>
+					<img src="/images/nav-notifications.svg" alt="" />
+					<span>Notifications</span>
+				</MobileNavItem>
+				<MobileNavItem to="/jobs" $active={isActive("/jobs")}>
+					<img src="/images/nav-jobs.svg" alt="" />
+					<span>Jobs</span>
+				</MobileNavItem>
+			</MobileNav>
+		</>
 	);
 }
 

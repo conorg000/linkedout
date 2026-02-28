@@ -6,7 +6,7 @@ body {
 :root,
 html,
 body {
-	background-color: #f5f5f5;
+	background-color: #f3f2ef;
 	box-sizing: border-box;
 }
 
@@ -39,7 +39,7 @@ span {
 }
 
 body {
-	font-family: Arial, sans-serif;
+	font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 @keyframes fadeIn {

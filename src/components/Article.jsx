@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
 import { updateArticleAPI } from "../action";
@@ -31,12 +32,13 @@ const SharedActor = styled.div`
 	padding: 12px 16px 0;
 	margin-bottom: 8px;
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	a {
 		margin-right: 12px;
 		flex-grow: 1;
 		overflow: hidden;
 		display: flex;
+		text-decoration: none;
 		img {
 			width: 48px;
 			height: 48px;
@@ -55,6 +57,10 @@ const SharedActor = styled.div`
 					font-size: 14px;
 					font-weight: 700;
 					color: #000;
+					&:hover {
+						color: #0a66c2;
+						text-decoration: underline;
+					}
 				}
 				&:nth-child(n + 2) {
 					font-size: 12px;
@@ -70,6 +76,21 @@ const SharedActor = styled.div`
 		border: none;
 		outline: none;
 		background: transparent;
+	}
+`;
+
+const FollowButton = styled.button`
+	font-size: 14px;
+	font-weight: 600;
+	color: #0a66c2;
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 4px 0;
+	margin-top: 4px;
+	white-space: nowrap;
+	&:hover {
+		text-decoration: underline;
 	}
 `;
 
@@ -95,6 +116,7 @@ const CommentDescription = styled.div`
 		flex-grow: 1;
 		overflow: hidden;
 		display: flex;
+		text-decoration: none;
 		img {
 			width: 40px;
 			height: 40px;
@@ -167,7 +189,7 @@ const LikeAndCommentButtons = styled.button`
         cursor: pointer;
         text-decoration: underline;
     }
-`
+`;
 
 const SocialActions = styled.div`
 	display: flex;
@@ -176,6 +198,7 @@ const SocialActions = styled.div`
 	margin: 4px 12px;
 	min-height: 40px;
 	padding-bottom: 5px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 	button {
 		display: inline-flex;
 		align-items: center;
@@ -202,6 +225,32 @@ const SocialActions = styled.div`
 	}
 `;
 
+const CommentInputBar = styled.div`
+	display: flex;
+	align-items: center;
+	padding: 8px 16px;
+	gap: 8px;
+	img {
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+	}
+	input {
+		flex: 1;
+		padding: 8px 12px;
+		border: 1px solid rgba(0, 0, 0, 0.15);
+		border-radius: 35px;
+		font-size: 14px;
+		color: rgba(0, 0, 0, 0.6);
+		background: #f2f2f2;
+		outline: none;
+		cursor: pointer;
+		&:hover {
+			background: #e8e8e8;
+		}
+	}
+`;
+
 const Comment = ({comment, profiles, profileIds}) => {
 	const [commentActor, setCommentActor] = useState({});
 	useEffect(() => {
@@ -218,7 +267,6 @@ const Comment = ({comment, profiles, profileIds}) => {
 				<div>
 				<span>{commentActor.displayName}</span>
 				<span>{commentActor.headline}</span>
-				{/* <span>{comment.date.toDate().toLocaleDateString()}</span> */}
 				<span>{comment.description}</span>
 			</div>
 			</a>
@@ -286,14 +334,15 @@ function Article(props) {
     return (
         <ArticleStyle>
         <SharedActor>
-            <a>
+            <Link to={"/profile/" + props.article.actor.id}>
                 {articleActor.photoURL ? <img src={articleActor.photoURL} alt="" /> : <img src="/images/user.svg" alt="" />}
                 <div>
                     <span>{articleActor.displayName}</span>
                     <span>{articleActor.headline}</span>
                     <span>{props.article.actor.date.toDate().toLocaleDateString()}</span>
                 </div>
-            </a>
+            </Link>
+            <FollowButton>+ Follow</FollowButton>
             <button>
                 <img src="/images/ellipses.svg" alt="" />
             </button>
@@ -306,11 +355,10 @@ function Article(props) {
             {((props.article.comments.length > 0) || (props.article.likes.count > 0)) && (
                 <>
                     <li onClick={likedClickHandler}>
-							<LikeAndCommentButtons>
-								<img src="https://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb" alt="" />
-								{/* <img src="https://static-exp1.licdn.com/sc/h/7fx9nkd7mx8avdpqm5hqcbi97" alt="" /> */}
-								<span>{props.article.likes.count === 0 ? "" : numberWithCommas(props.article.likes.count)}</span>
-							</LikeAndCommentButtons>
+						<LikeAndCommentButtons>
+							<img src="https://static-exp1.licdn.com/sc/h/d310t2g24pvdy4pt1jkedo4yb" alt="" />
+							<span>{props.article.likes.count === 0 ? "" : numberWithCommas(props.article.likes.count)}</span>
+						</LikeAndCommentButtons>
                     </li>
                     <li>
                         <LikeAndCommentButtons onClick={()=>{toggleShowComments(!showComments)}}>
@@ -333,13 +381,17 @@ function Article(props) {
             </button>
             <button>
                 <img src="/images/share-icon.svg" alt="" />
-                <span>Share</span>
+                <span>Repost</span>
             </button>
             <button>
                 <img src="/images/send-icon.svg" alt="" />
                 <span>Send</span>
             </button>
         </SocialActions>
+		<CommentInputBar onClick={clickHandler}>
+			{props.user.photoURL ? <img src={props.user.photoURL} alt="" /> : <img src="/images/user.svg" alt="" />}
+			<input type="text" placeholder="Add a comment..." readOnly />
+		</CommentInputBar>
         {showComments && (props.article.comments.length > 0) && (
             props.article.comments.map((comment, key) => (
                 <Comment key={key} comment={comment} profiles={props.profiles} profileIds={props.profileIds} />
