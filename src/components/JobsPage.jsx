@@ -41,12 +41,13 @@ const SidebarCard = styled(Card)`
 	padding: 16px;
 `;
 
-const SidebarIcon = styled.div`
+const SidebarAvatar = styled.img`
 	width: 72px;
 	height: 72px;
 	border-radius: 50%;
-	background: #e7e7e7;
 	margin: 0 auto 8px;
+	display: block;
+	object-fit: cover;
 `;
 
 const ProfileName = styled.h3`
@@ -331,7 +332,7 @@ function JobsPage() {
 		<Container>
 			<Sidebar>
 				<SidebarCard>
-					<SidebarIcon />
+					<SidebarAvatar src="/images/user.svg" alt="" />
 					<ProfileName>Harold</ProfileName>
 					<ProfileHeadline>Disrupting the disruption industry</ProfileHeadline>
 					<SidebarLink><LinkIcon>&#9881;</LinkIcon> Preferences</SidebarLink>

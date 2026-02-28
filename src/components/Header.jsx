@@ -148,22 +148,24 @@ const BadgeContainer = styled.div`
 
 const Badge = styled.span`
 	position: absolute;
-	top: -6px;
-	right: -6px;
+	top: -8px;
+	right: -10px;
 	background: #cc1016;
 	&& {
 		color: #fff;
 	}
-	font-size: 9px;
-	font-weight: 700;
+	font-size: 10px;
+	font-weight: 600;
 	min-width: 16px;
 	height: 16px;
-	border-radius: 8px;
+	border-radius: 10px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0 4px;
+	padding: 0 5px;
 	line-height: 1;
+	border: 2px solid #fff;
+	box-sizing: content-box;
 `;
 
 const SignOutContainer = styled.div`
@@ -178,6 +180,8 @@ const SignOutContainer = styled.div`
 	z-index: 15;
 	box-shadow: 0 0 0 1px rgb(0 0 0 / 15%), 0 6px 9px rgb(0 0 0 / 20%);
 	width: 280px;
+	max-height: calc(100vh - 60px);
+	overflow-y: auto;
 `;
 
 const MeDropdownContent = styled.div`
@@ -258,13 +262,21 @@ const DropdownSection = styled.div`
 `;
 
 const SignIn = styled.div`
-	padding-top: 10px;
-	background: white;
-	border-radius: 0 0 5px 5px;
-	width: 100px;
-	height: 40px;
-	font-size: 16px;
-	text-align: center;
+	padding-top: 4px;
+	button {
+		width: 100%;
+		padding: 6px 16px;
+		background: #0a66c2;
+		color: #fff;
+		border: none;
+		border-radius: 16px;
+		font-size: 14px;
+		font-weight: 600;
+		cursor: pointer;
+		&:hover {
+			background: #004182;
+		}
+	}
 `;
 
 const User = styled(NavList)`
@@ -307,7 +319,27 @@ const PremiumLink = styled(NavList)`
 `;
 
 const Form = styled.form`
-	padding: 10px 10px 0px 10px;
+	padding: 4px 0 0;
+	label {
+		font-size: 12px;
+		color: rgba(0, 0, 0, 0.6);
+		display: block;
+		margin-bottom: 2px;
+	}
+	input {
+		display: block;
+		width: 100%;
+		padding: 6px 8px;
+		border: 1px solid rgba(0, 0, 0, 0.3);
+		border-radius: 4px;
+		font-size: 13px;
+		margin-bottom: 8px;
+		box-sizing: border-box;
+		&:focus {
+			outline: none;
+			border-color: #0a66c2;
+		}
+	}
 `;
 
 const MobileNav = styled.nav`
@@ -487,35 +519,35 @@ function Header(props) {
 									</span>
 								</a>
 								<SignOutContainer>
-									{adminIsSignedIn ? (
-										<MeDropdownContent>
-											<ProfileCard>
-												<img src={props.user.photoURL || "/images/user.svg"} alt="" />
-												<div>
-													<h4>{props.user.displayName}</h4>
-													<p>Disrupting the disruption industry</p>
-												</div>
-											</ProfileCard>
-											<ViewProfileButton to="/profile/admin">View Profile</ViewProfileButton>
-											<DropdownSection>
-												<h5>Account</h5>
-												<a href="#">Try 1 month of Premium for A$0</a>
-												<a href="#">Settings & Privacy</a>
-												<a href="#">Help</a>
-												<a href="#">Language</a>
-											</DropdownSection>
-											<DropdownSection>
-												<h5>Manage</h5>
-												<a href="#">Posts & Activity</a>
-												<a href="#">Job Posting Account</a>
-											</DropdownSection>
-											<DropdownSection>
+									<MeDropdownContent>
+										<ProfileCard>
+											<img src={props.user?.photoURL || "/images/user.svg"} alt="" />
+											<div>
+												<h4>{props.user?.displayName || "Harold"}</h4>
+												<p>Disrupting the disruption industry</p>
+											</div>
+										</ProfileCard>
+										<ViewProfileButton to="/profile/admin">View Profile</ViewProfileButton>
+										<DropdownSection>
+											<h5>Account</h5>
+											<a href="#">Try 1 month of Premium for A$0</a>
+											<a href="#">Settings & Privacy</a>
+											<a href="#">Help</a>
+											<a href="#">Language</a>
+										</DropdownSection>
+										<DropdownSection>
+											<h5>Manage</h5>
+											<a href="#">Posts & Activity</a>
+											<a href="#">Job Posting Account</a>
+										</DropdownSection>
+										<DropdownSection>
+											{adminIsSignedIn ? (
 												<button onClick={() => props.signOut()}>Sign Out</button>
-											</DropdownSection>
-										</MeDropdownContent>
-									) : (
-										<AdminSignInForm signInMethod={props.adminSignIn} />
-									)}
+											) : (
+												<AdminSignInForm signInMethod={props.adminSignIn} />
+											)}
+										</DropdownSection>
+									</MeDropdownContent>
 								</SignOutContainer>
 							</User>
 							<Work>
