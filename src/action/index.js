@@ -139,16 +139,18 @@ export function postArticleAPI(payload) {
 export function getArticlesAPI() {
 	return (dispatch) => {
 		dispatch(setLoading(true));
-		let payload;
-		let id;
+		let firstLoad = true;
 		db.collection("articles")
 			.orderBy("actor.date", "desc")
 			.onSnapshot((snapshot) => {
-				payload = snapshot.docs.map((doc) => doc.data());
-				id = snapshot.docs.map((doc) => doc.id);
+				const payload = snapshot.docs.map((doc) => doc.data());
+				const id = snapshot.docs.map((doc) => doc.id);
 				dispatch(getArticles(payload, id));
+				if (firstLoad) {
+					dispatch(setLoading(false));
+					firstLoad = false;
+				}
 			});
-		dispatch(setLoading(false));
 	};
 }
 
@@ -162,16 +164,18 @@ export function updateArticleAPI(payload) {
 export function getProfilesAPI() {
 	return (dispatch) => {
 		dispatch(setLoading(true));
-		let payload;
-		let id;
+		let firstLoad = true;
 		db.collection("profiles")
 			.orderBy("displayName", "desc")
 			.onSnapshot((snapshot) => {
-				payload = snapshot.docs.map((doc) => doc.data());
-				id = snapshot.docs.map((doc) => doc.id);
+				const payload = snapshot.docs.map((doc) => doc.data());
+				const id = snapshot.docs.map((doc) => doc.id);
 				dispatch(getProfiles(payload, id));
+				if (firstLoad) {
+					dispatch(setLoading(false));
+					firstLoad = false;
+				}
 			});
-		dispatch(setLoading(false));
 	};
 }
 

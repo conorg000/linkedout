@@ -90,6 +90,7 @@ const NavListWrap = styled.ul`
 	flex-wrap: nowrap;
 	list-style-type: none;
 	justify-content: space-between;
+	overflow: visible;
 	.active {
 		span::after {
 			content: "";
@@ -129,6 +130,10 @@ const NavList = styled.li`
 			text-align: center;
 		}
 	}
+	a:hover,
+	a:visited {
+		text-decoration: none;
+	}
 	&:hover,
 	&:active {
 		a {
@@ -151,9 +156,7 @@ const Badge = styled.span`
 	top: -8px;
 	right: -10px;
 	background: #cc1016;
-	&& {
-		color: #fff;
-	}
+	color: #fff !important;
 	font-size: 10px;
 	font-weight: 600;
 	min-width: 16px;
@@ -179,52 +182,70 @@ const SignOutContainer = styled.div`
 	display: none;
 	z-index: 15;
 	box-shadow: 0 0 0 1px rgb(0 0 0 / 15%), 0 6px 9px rgb(0 0 0 / 20%);
-	width: 280px;
+	width: 240px;
 	max-height: calc(100vh - 60px);
 	overflow-y: auto;
 `;
 
 const MeDropdownContent = styled.div`
 	padding: 0;
+	a, button {
+		display: block !important;
+		min-height: unset !important;
+		min-width: unset !important;
+		flex-direction: unset !important;
+		justify-content: unset !important;
+		align-items: unset !important;
+	}
 `;
 
 const ProfileCard = styled.div`
-	padding: 16px;
+	padding: 12px 16px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	img {
-		width: 56px;
-		height: 56px;
+		width: 48px;
+		height: 48px;
 		border-radius: 50%;
 		object-fit: cover;
+		flex-shrink: 0;
 	}
 	div {
+		overflow: hidden;
 		h4 {
 			font-size: 16px;
 			font-weight: 600;
 			color: rgba(0, 0, 0, 0.9);
+			line-height: 1.3;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 		p {
 			font-size: 12px;
 			color: rgba(0, 0, 0, 0.6);
-			margin-top: 2px;
+			line-height: 1.4;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 `;
 
 const ViewProfileButton = styled(Link)`
 	display: block;
-	margin: 12px 16px;
-	padding: 4px 16px;
+	margin: 8px 16px;
+	padding: 5px 0;
 	border: 1px solid #0a66c2;
 	border-radius: 16px;
-	color: #0a66c2;
+	color: #0a66c2 !important;
 	font-size: 14px;
 	font-weight: 600;
 	text-align: center;
-	text-decoration: none;
+	text-decoration: none !important;
+	line-height: 1.4;
 	&:hover {
 		background: rgba(112, 181, 249, 0.15);
 		border-color: #004182;
@@ -238,15 +259,15 @@ const DropdownSection = styled.div`
 		border-bottom: none;
 	}
 	h5 {
-		font-size: 14px;
+		font-size: 12px;
 		font-weight: 600;
 		color: rgba(0, 0, 0, 0.9);
-		padding: 4px 16px;
+		padding: 0 16px 4px;
 	}
 	a, button {
 		display: block;
 		width: 100%;
-		padding: 4px 16px;
+		padding: 6px 16px;
 		font-size: 14px;
 		color: rgba(0, 0, 0, 0.6);
 		text-decoration: none;
@@ -254,25 +275,29 @@ const DropdownSection = styled.div`
 		border: none;
 		text-align: left;
 		cursor: pointer;
-		line-height: 2;
+		line-height: 1.4;
+		box-sizing: border-box;
 		&:hover {
 			background: rgba(0, 0, 0, 0.08);
+			text-decoration: none;
 		}
 	}
 `;
 
 const SignIn = styled.div`
-	padding-top: 4px;
+	margin-top: 4px;
 	button {
 		width: 100%;
-		padding: 6px 16px;
+		padding: 5px 0;
 		background: #0a66c2;
-		color: #fff;
+		color: #fff !important;
 		border: none;
 		border-radius: 16px;
 		font-size: 14px;
 		font-weight: 600;
 		cursor: pointer;
+		line-height: 1.4;
+		text-align: center !important;
 		&:hover {
 			background: #004182;
 		}
@@ -280,6 +305,7 @@ const SignIn = styled.div`
 `;
 
 const User = styled(NavList)`
+	position: relative;
 	a > img {
 		border-radius: 50%;
 		width: 25px;
@@ -319,21 +345,16 @@ const PremiumLink = styled(NavList)`
 `;
 
 const Form = styled.form`
-	padding: 4px 0 0;
-	label {
-		font-size: 12px;
-		color: rgba(0, 0, 0, 0.6);
-		display: block;
-		margin-bottom: 2px;
-	}
+	padding: 0 16px 4px;
 	input {
 		display: block;
 		width: 100%;
-		padding: 6px 8px;
+		padding: 4px 8px;
+		height: 28px;
 		border: 1px solid rgba(0, 0, 0, 0.3);
 		border-radius: 4px;
-		font-size: 13px;
-		margin-bottom: 8px;
+		font-size: 14px;
+		margin-bottom: 6px;
 		box-sizing: border-box;
 		&:focus {
 			outline: none;
@@ -427,14 +448,8 @@ const handleSubmit = (event, signInMethod) => {
 const AdminSignInForm = ({ signInMethod }) => {
 	return (
 		<Form className="form" onSubmit={(event) => handleSubmit(event, signInMethod)}>
-			<div className="input-group">
-				<label htmlFor="email">Email</label>
-				<input style={{ display: "block" }} type="email" name="email" />
-			</div>
-			<div className="input-group">
-				<label htmlFor="password">Password</label>
-				<input style={{ display: "block" }} type="password" name="password" />
-			</div>
+			<input type="email" name="email" placeholder="Email" />
+			<input type="password" name="password" placeholder="Password" />
 			<SignIn>
 				<button className="primary">Sign In</button>
 			</SignIn>
@@ -529,6 +544,13 @@ function Header(props) {
 										</ProfileCard>
 										<ViewProfileButton to="/profile/admin">View Profile</ViewProfileButton>
 										<DropdownSection>
+											{adminIsSignedIn ? (
+												<button onClick={() => props.signOut()}>Sign Out</button>
+											) : (
+												<AdminSignInForm signInMethod={props.adminSignIn} />
+											)}
+										</DropdownSection>
+										<DropdownSection>
 											<h5>Account</h5>
 											<a href="#">Try 1 month of Premium for A$0</a>
 											<a href="#">Settings & Privacy</a>
@@ -539,13 +561,6 @@ function Header(props) {
 											<h5>Manage</h5>
 											<a href="#">Posts & Activity</a>
 											<a href="#">Job Posting Account</a>
-										</DropdownSection>
-										<DropdownSection>
-											{adminIsSignedIn ? (
-												<button onClick={() => props.signOut()}>Sign Out</button>
-											) : (
-												<AdminSignInForm signInMethod={props.adminSignIn} />
-											)}
 										</DropdownSection>
 									</MeDropdownContent>
 								</SignOutContainer>

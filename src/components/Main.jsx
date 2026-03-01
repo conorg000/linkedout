@@ -102,6 +102,71 @@ const Content = styled.div`
 	}
 `;
 
+const shimmer = `
+	@keyframes shimmer {
+		0% { background-position: -600px 0; }
+		100% { background-position: 600px 0; }
+	}
+`;
+
+const SkeletonCard = styled.div`
+	background: #fff;
+	border-radius: 5px;
+	box-shadow: 0 0 0 1px rgb(0 0 0 / 15%), 0 0 0 rgb(0 0 0 / 20%);
+	margin-bottom: 8px;
+	padding: 16px;
+
+	.skeleton-line {
+		background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+		background-size: 1200px 100%;
+		animation: shimmer 1.4s infinite linear;
+		border-radius: 4px;
+	}
+
+	@keyframes shimmer {
+		0% { background-position: -600px 0; }
+		100% { background-position: 600px 0; }
+	}
+
+	.sk-header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 12px;
+	}
+	.sk-avatar {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		flex-shrink: 0;
+	}
+	.sk-name {
+		height: 12px;
+		width: 120px;
+		margin-bottom: 6px;
+	}
+	.sk-headline {
+		height: 10px;
+		width: 180px;
+	}
+	.sk-body-line {
+		height: 10px;
+		margin-bottom: 8px;
+		&:last-child { width: 70%; margin-bottom: 0; }
+	}
+	.sk-footer {
+		display: flex;
+		gap: 8px;
+		margin-top: 12px;
+		padding-top: 12px;
+		border-top: 1px solid rgba(0,0,0,0.08);
+	}
+	.sk-action {
+		height: 10px;
+		flex: 1;
+	}
+`;
+
 function Main(props) {
 	const [showModal, setShowModal] = useState("close");
 	const adminIsSignedIn = props.user?.email === "ceo@linkedout.company";
@@ -162,7 +227,26 @@ function Main(props) {
 				<span>Sort by: <strong>Top</strong> ▾</span>
 			</SortBar>
 			<Content>
-				{props.loading && <img src="/images/spin-loader.gif" alt="" />}
+				{props.loading && props.articles.length === 0 && [0, 1, 2].map((i) => (
+					<SkeletonCard key={i}>
+						<div className="sk-header">
+							<div className="skeleton-line sk-avatar" />
+							<div>
+								<div className="skeleton-line sk-name" />
+								<div className="skeleton-line sk-headline" />
+							</div>
+						</div>
+						<div className="skeleton-line sk-body-line" />
+						<div className="skeleton-line sk-body-line" />
+						<div className="skeleton-line sk-body-line" />
+						<div className="sk-footer">
+							<div className="skeleton-line sk-action" />
+							<div className="skeleton-line sk-action" />
+							<div className="skeleton-line sk-action" />
+							<div className="skeleton-line sk-action" />
+						</div>
+					</SkeletonCard>
+				))}
 				{props.articles.length > 0 &&
 					props.articles.map((article, key) => (
 						<Article key={key} article={article} user={props.user} articleId={props.ids[key]} />
